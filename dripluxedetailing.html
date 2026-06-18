@@ -1,0 +1,1654 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DripLuxe Detailing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #07090F;
+      --surface: rgba(11, 16, 30, 0.82);
+      --surface-strong: rgba(12, 18, 34, 0.96);
+      --white: #F7F9FF;
+      --text: #E8EDF8;
+      --muted: #8DA2C8;
+      --blue: #0FB9FF;
+      --blue-deep: #0A4D9C;
+      --blue-soft: rgba(15, 185, 255, 0.18);
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      --radius: 28px;
+      --transition: 280ms ease;
+    }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 0;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(15,185,255,0.10), transparent 22%),
+                  radial-gradient(circle at bottom right, rgba(10,77,156,0.22), transparent 18%),
+                  linear-gradient(180deg, #06080F 0%, #070A11 100%);
+      color: var(--text);
+      font-family: 'Open Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top center, rgba(15,185,255,0.08), transparent 25%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+    .page { display: none; opacity: 0; transition: opacity 0.5s var(--transition); }
+    .page.active { display: block; opacity: 1; }
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 2rem;
+      background: rgba(7,9,15,0.75);
+      border-bottom: 1px solid rgba(15,185,255,0.12);
+      backdrop-filter: blur(18px);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .brand span { opacity: 0.8; }
+    .nav-links {
+      display: none;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .nav-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      position: relative;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .nav-toggle::before,
+    .nav-toggle::after,
+    .nav-toggle span {
+      content: '';
+      position: absolute;
+      left: 50%;
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 999px;
+      transform: translateX(-50%);
+    }
+    .nav-toggle::before { top: 32%; }
+    .nav-toggle span { top: 50%; }
+    .nav-toggle::after { top: 68%; }
+    .nav-toggle:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .nav-toggle[aria-expanded="true"] { background: rgba(255,255,255,0.12); transform: scale(0.98); }
+    .nav-links button {
+      border: none;
+      background: transparent;
+      color: rgba(248,250,255,0.78);
+      font-size: 0.95rem;
+      padding: 0.75rem 0;
+      transition: color var(--transition), transform var(--transition);
+    }
+    .nav-links button:hover,
+    .nav-links button.active { color: var(--white); transform: translateY(-1px); }
+    .nav-cta {
+      display: none;
+      border: 1px solid rgba(15,185,255,0.3);
+      background: rgba(15,185,255,0.12);
+      color: var(--white);
+      border-radius: 999px;
+      padding: 0.95rem 1.7rem;
+      font-weight: 600;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .nav-cta:hover { background: rgba(15,185,255,0.22); transform: translateY(-2px); }
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 1500;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3.2rem 1rem 1rem;
+      background: rgba(4,7,16,0.92);
+      backdrop-filter: blur(14px);
+    }
+    .mobile-menu.active { display: flex; }
+    .mobile-menu-panel {
+      width: min(100%, 420px);
+      border-radius: 20px;
+      padding: 1.6rem;
+      background: rgba(8,12,20,0.98);
+      border: 1px solid rgba(15,185,255,0.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
+      transform: translateY(-6px);
+      transition: transform 260ms var(--transition), opacity 220ms var(--transition);
+    }
+    .mobile-menu.active .mobile-menu-panel { transform: translateY(0); }
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .mobile-menu-close {
+      border: none;
+      background: transparent;
+      color: var(--white);
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+    .mobile-menu-links {
+      display: grid;
+      gap: 0.9rem;
+    }
+    .mobile-menu-links button {
+      width: 100%;
+      text-align: left;
+      padding: 1.05rem 1.25rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color: var(--white);
+      font-size: 1.02rem;
+      font-weight: 700;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .mobile-menu-links button:hover { background: rgba(15,185,255,0.12); transform: translateY(-2px); }
+    .mobile-menu-cta { margin-top: 1rem; display: flex; }
+    .mobile-menu-cta .nav-cta { display: inline-flex; width: 100%; justify-content: center; }
+    main {
+      padding-top: var(--nav-offset, 86px);
+    }
+    .hero {
+      position: relative;
+      min-height: calc(92vh - 86px);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 6rem 2rem 3rem;
+      z-index: 1;
+    }
+    .section-hero {
+      position: relative;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      min-height: 36vh;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 1.25rem;
+      background: radial-gradient(circle at 20% 15%, rgba(15,185,255,0.06), transparent 18%), rgba(8,12,20,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .section-hero img { width: auto; max-width: 420px; height: auto; max-height: 220px; object-fit: contain; display: block; }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7,9,15,0.2), rgba(7,9,15,0.5) 70%);
+      pointer-events: none;
+    }
+    .hero-bg {
+      display: none;
+    }
+    video.hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.12) brightness(0.85);
+    }
+    .hero-light, .hero-lines { position: absolute; inset: 0; pointer-events: none; }
+    .hero-light {
+      background: radial-gradient(circle at 20% 15%, rgba(15,185,255,0.16), transparent 18%),
+                  radial-gradient(circle at 85% 35%, rgba(15,185,255,0.12), transparent 16%),
+                  radial-gradient(circle at 50% 80%, rgba(255,255,255,0.06), transparent 22%);
+      opacity: 0.7;
+    }
+    .hero-lines::before,
+    .hero-lines::after {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(15,185,255,0.16);
+      border-radius: 50%;
+      filter: blur(1px);
+      opacity: 0.7;
+      animation: float 14s ease-in-out infinite alternate;
+    }
+    .hero-lines::before { top: 10%; left: 10%; }
+    .hero-lines::after { bottom: 18%; right: 16%; width: 180px; height: 180px; animation-duration: 18s; }
+    @keyframes float { to { transform: translateY(-18px) scale(1.03); } }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1040px;
+      width: 100%;
+      display: grid;
+      gap: 1.25rem;
+      align-items: start;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: rgba(255,255,255,0.82);
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: rgba(15,185,255,0.55);
+    }
+    .hero-title {
+      margin: 0;
+      font-family: inherit;
+      font-size: clamp(3.4rem, 6vw, 5.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+      color: var(--white);
+      text-shadow: 0 22px 70px rgba(0,0,0,0.5);
+    }
+    .hero-title strong { color: var(--blue); }
+    .hero-copy {
+      max-width: 720px;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: rgba(232,237,248,0.88);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .hero-actions .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 1.05rem 2.1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(15,185,255,0.95), rgba(10,77,156,0.96));
+      color: #050714;
+      box-shadow: 0 22px 60px rgba(15,185,255,0.28);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 30px 80px rgba(15,185,255,0.34); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+    }
+    /* Service package Book buttons: white box with black text */
+    .btn-book-package {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .btn-book-package:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+    /* Ensure buttons use site font */
+    .btn, .btn-primary, .btn-secondary, .btn-book-package, .fab { font-family: inherit; }
+
+    /* Messaging buttons: white box with black text */
+    #choice-whatsapp,
+    #choice-sms,
+    #confirm-booking,
+    #booking-page-launch {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 0.9rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    #choice-whatsapp:hover,
+    #choice-sms:hover,
+    #confirm-booking:hover,
+    #booking-page-launch:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+    #confirm-booking:hover,
+    #booking-page-launch:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+    .hero-trust {
+      display: grid;
+      gap: 0.7rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      margin-top: 1rem;
+    }
+    .trust-chip {
+      padding: 1rem 1.25rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(15,185,255,0.14);
+      color: rgba(255,255,255,0.92);
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      backdrop-filter: blur(14px);
+    }
+    .section {
+      position: relative;
+      margin: 0 auto 2.4rem;
+      padding: 2rem 1.4rem;
+      max-width: 1180px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(11,16,29,0.88), rgba(7,11,18,0.82));
+      border: 1px solid rgba(15,185,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+    .section::before {
+      content: '';
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15,185,255,0.12), transparent 55%);
+      top: -80px;
+      right: -80px;
+      pointer-events: none;
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-family: inherit;
+      font-size: clamp(2rem, 2.8vw, 3.25rem);
+      letter-spacing: 0.03em;
+      color: var(--white);
+    }
+    .section-title span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 18px;
+      background: rgba(15,185,255,0.14);
+      color: var(--blue);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .section-subtitle {
+      max-width: 760px;
+      margin-bottom: 2rem;
+      color: rgba(232,237,248,0.78);
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .glass-card {
+      position: relative;
+      display: grid;
+      gap: 1.15rem;
+      padding: 2rem;
+      border-radius: 28px;
+      background: rgba(9, 13, 24, 0.72);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .glass-card.service-package {
+      background: transparent;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(15,185,255,0.15), transparent 40%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .glass-card.service-package::before {
+      display: none;
+    }
+    .service-package {
+      position: relative;
+      background-size: cover !important;
+      background-position: center !important;
+      background-color: transparent !important;
+    }
+    .service-package::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 28px;
+    }
+    /* Overlay via ::before for Express Drip, Deluxe Drip, Drip Drip.
+       ::after is killed by display:none further down, so we use ::before instead. */
+    .grid-3 > .glass-card.service-package:nth-child(1)::before,
+    .grid-3 > .glass-card.service-package:nth-child(2)::before,
+    .grid-3 > .glass-card.service-package:nth-child(3)::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 28px;
+    }
+    /* Stronger text shadow for first 3 cards */
+    .grid-3 > .service-package:nth-child(1) .card-title,
+    .grid-3 > .service-package:nth-child(1) .card-text,
+    .grid-3 > .service-package:nth-child(1) ul,
+    .grid-3 > .service-package:nth-child(2) .card-title,
+    .grid-3 > .service-package:nth-child(2) .card-text,
+    .grid-3 > .service-package:nth-child(2) ul,
+    .grid-3 > .service-package:nth-child(3) .card-title,
+    .grid-3 > .service-package:nth-child(3) .card-text,
+    .grid-3 > .service-package:nth-child(3) ul {
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 1), 0 1px 4px rgba(0, 0, 0, 0.95);
+    }
+    .grid-3 > .service-package:nth-child(1) .card-title,
+    .grid-3 > .service-package:nth-child(2) .card-title,
+    .grid-3 > .service-package:nth-child(3) .card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+    .grid-3 > .service-package:nth-child(4),
+    .grid-3 > .service-package:nth-child(5) {
+      background-color: transparent !important;
+    }
+    .service-package > * {
+      position: relative;
+      z-index: 2;
+      color: var(--white);
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+    }
+    .service-package .card-title,
+    .service-package .card-text,
+    .service-package ul {
+      color: var(--white);
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.8);
+    }
+    .glass-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(15,185,255,0.24);
+      box-shadow: 0 30px 85px rgba(0,0,0,0.45);
+    }
+    .glass-card:nth-child(1)::after,
+    .glass-card:nth-child(2)::after,
+    .glass-card:nth-child(3)::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15,185,255,0.16), transparent 60%);
+      top: -30px;
+      right: -30px;
+      pointer-events: none;
+    }
+    .grid-3 .glass-card:nth-child(1)::after,
+    .grid-3 .glass-card:nth-child(2)::after,
+    .grid-3 .glass-card:nth-child(3)::after {
+      display: none;
+    }
+    .card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(15,185,255,0.18);
+      color: var(--blue);
+      font-size: 1.5rem;
+      box-shadow: inset 0 0 0 1px rgba(15,185,255,0.08);
+      z-index: 1;
+    }
+    .card-title {
+      margin: 0;
+      font-family: inherit;
+      font-size: 1.2rem;
+      line-height: 1.1;
+      color: var(--white);
+      letter-spacing: 0.04em;
+    }
+    .card-text {
+      margin: 0;
+      color: rgba(232,237,248,0.8);
+      line-height: 1.85;
+    }
+    .badge-list {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 1.5rem;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1rem 1.2rem;
+      border-radius: 20px;
+      background: rgba(15,185,255,0.08);
+      border: 1px solid rgba(15,185,255,0.12);
+      color: var(--white);
+      font-weight: 600;
+      backdrop-filter: blur(14px);
+    }
+    .badge span { color: var(--blue); font-size: 1.4rem; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      padding: 1.75rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 50px rgba(15,185,255,0.06);
+    }
+    .stat-number {
+      font-family: inherit;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .stat-label { color: rgba(232,237,248,0.75); font-size: 0.93rem; line-height: 1.5; }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.75rem;
+    }
+    .testimonial-card {
+      position: relative;
+      padding: 1.4rem;
+      border-radius: 28px;
+      background: rgba(8, 11, 18, 0.88);
+      border: 1px solid rgba(15,185,255,0.12);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+    .testimonial-card::before {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      top: -18px;
+      right: -18px;
+      background: radial-gradient(circle, rgba(15,185,255,0.16), transparent 60%);
+      pointer-events: none;
+    }
+    .testimonial-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .testimonial-name { font-weight: 700; color: var(--white); }
+    .testimonial-role { color: rgba(232,237,248,0.68); font-size: 0.9rem; }
+    .testimonial-text { margin: 1rem 0 0; color: rgba(232,237,248,0.82); line-height: 1.85; }
+    .testimonial-stars { color: var(--blue); margin-top: 1rem; font-size: 1rem; }
+    .showcase {
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .showcase-header {
+      display: block;
+      gap: 0;
+      margin-bottom: 0;
+    }
+    .showcase-hero {
+      display: none;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .gallery-item {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #080B15;
+      aspect-ratio: 1;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .gallery-item:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 28px 90px rgba(15,185,255,0.2);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .showcase-card {
+      position: relative;
+      border-radius: 32px;
+      overflow: hidden;
+      background: #080B15;
+      min-height: 420px;
+      box-shadow: 0 28px 90px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .showcase-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform var(--transition);
+    }
+    .showcase-card:hover img { transform: scale(1.06); }
+    .showcase-label {
+      position: absolute;
+      left: 2rem;
+      bottom: 2rem;
+      z-index: 2;
+      padding: 0.95rem 1.2rem;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(15,185,255,0.18);
+      color: var(--white);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      margin: 2.5rem 0;
+      background: linear-gradient(90deg, transparent, rgba(15,185,255,0.2), transparent);
+    }
+    .booking-panel {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+    .booking-info {
+      display: grid;
+      gap: 1rem;
+    }
+    .booking-info p { color: rgba(232,237,248,0.85); line-height: 1.85; }
+    .booking-card {
+      padding: 2rem;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(15,185,255,0.15);
+      box-shadow: inset 0 0 60px rgba(15,185,255,0.08);
+      backdrop-filter: blur(18px);
+      display: grid;
+      gap: 1.5rem;
+    }
+    .booking-step {
+      display: grid;
+      gap: 1rem;
+    }
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(15,185,255,0.12);
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .step-label {
+      color: var(--white);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    .package-list {
+      display: grid;
+      gap: 1rem;
+    }
+    .package-option {
+      border-radius: 24px;
+      padding: 1.4rem;
+      background: rgba(8, 12, 20, 0.82);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .package-option:hover { transform: translateY(-4px); border-color: rgba(15,185,255,0.24); box-shadow: 0 18px 48px rgba(0,0,0,0.24); }
+    .package-option.selected { border-color: rgba(15,185,255,0.32); }
+    .service-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+    .service-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+      border-radius: 18px;
+      padding: 0.95rem 1rem;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .service-btn.selected,
+    .service-btn:hover {
+      background: rgba(15,185,255,0.18);
+      border-color: rgba(15,185,255,0.3);
+      transform: translateY(-1px);
+    }
+    .package-option h3 { margin: 0 0 0.45rem; font-family: inherit; font-size: 1.1rem; color: var(--white); }
+    .package-option p { margin: 0; color: rgba(232,237,248,0.8); line-height: 1.8; }
+    .form-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    /* Booking page: spread packages into responsive cards and use light blue background with black text */
+    .package-list { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .package-option {
+      background: #D6F0FF;
+      color: #000000;
+      border: 1px solid rgba(10,145,210,0.45);
+      padding: 1.35rem;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .package-option h3 { color: #0A2A45; }
+    .package-option p { color: rgba(0,0,0,0.87); }
+    .package-option:hover { box-shadow: 0 24px 72px rgba(10,145,210,0.22); transform: translateY(-6px); }
+    .package-option.selected { border-color: rgba(10,145,210,0.95); background: #BEE8FF; }
+
+    /* Booking summary on the page should remain a white card with black text */
+    #booking-summary-page .booking-card {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .form-input { width: 100%; border-radius: 18px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); color: var(--white); padding: 1rem 1.1rem; }
+    .form-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(15,185,255,0.12); }
+    .form-label { display: block; margin-bottom: 0.45rem; color: rgba(232,237,248,0.72); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(4, 7, 16, 0.86); backdrop-filter: blur(14px); padding: 1.5rem; }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: min(100%, 720px);
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 2rem;
+      border-radius: 32px;
+      background: rgba(8,12,20,0.96);
+      border: 1px solid rgba(15,185,255,0.18);
+      box-shadow: 0 40px 110px rgba(0,0,0,0.5);
+    }
+    .modal-header { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem; }
+    .modal-title { margin: 0; font-family: inherit; font-size: 1.9rem; color: var(--white); }
+    .modal-subtitle { margin: 0.45rem 0 0; color: rgba(232,237,248,0.72); }
+    .form-error { display: none; color: #FB7185; font-size: 0.84rem; margin-top: 0.45rem; }
+    .form-note { color: rgba(232,237,248,0.72); font-size: 0.86rem; margin-top: 0.35rem; }
+    .form-error.show { display: block; }
+    .success-state,
+    .choice-state { display: none; }
+    .success-card { padding: 1.8rem; border-radius: 24px; background: rgba(15,185,255,0.08); border: 1px solid rgba(15,185,255,0.18); }
+    .success-title { margin: 0 0 0.75rem; font-family: inherit; font-size: 1.4rem; color: var(--white); }
+    .success-text { margin: 0; color: rgba(232,237,248,0.82); }
+    .footer {
+      padding: 3.5rem 2rem 3rem;
+      background: rgba(7,9,15,0.98);
+      border-top: 1px solid rgba(15,185,255,0.14);
+    }
+    .footer-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; max-width: 1180px; margin: 0 auto; }
+    .footer-col h3 { margin: 0 0 1rem; font-family: inherit; font-size: 1.05rem; color: var(--white); }
+    .footer-col p, .footer-col li, .footer-col a { color: rgba(232,237,248,0.72); font-size: 0.94rem; line-height: 1.8; }
+    .footer-col ul { margin: 0; padding: 0; list-style: none; }
+    .footer-note { margin-top: 2rem; text-align: center; color: rgba(232,237,248,0.58); font-size: 0.93rem; }
+    /* Floating action buttons (visible on all pages) */
+    .fab-group { position: fixed; right: 20px; bottom: 22px; display: flex; flex-direction: column; gap: 0.7rem; z-index: 1600; }
+    .fab { display: inline-flex; align-items: center; justify-content: center; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 999px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); font-weight: 700; cursor: pointer; border: none; }
+    .fab-review { background: rgba(255,255,255,0.06); color: var(--white); border: 1px solid rgba(255,255,255,0.06); }
+    .fab-book { background: var(--white); color: #06080F; }
+    .fab:hover { transform: translateY(-4px); }
+    @media (max-width: 1120px) { .grid-3, .stats-grid, .testimonial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero { padding: 0 1.5rem 4rem; } .section { padding: 2.2rem 1.75rem; } .booking-panel, .showcase { grid-template-columns: 1fr; } }
+    /* Keep hamburger visible on desktop as requested; no desktop-only overrides here. */
+    @media (max-width: 760px) { nav { flex-wrap: wrap; justify-content: space-between; padding: 1rem 1rem; } .nav-toggle { display: inline-flex; } .nav-links { display: none; } .hero-title { font-size: clamp(2.4rem, 11vw, 3.6rem); } .hero-copy { font-size: 0.98rem; } .hero-actions { flex-direction: column; align-items: stretch; } .glass-card, .booking-card, .testimonial-card, .section { border-radius: 24px; } .grid-3, .stats-grid, .testimonial-grid, .badge-list { grid-template-columns: 1fr; } .hero-trust { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; } .showcase-header { margin-bottom: 1.5rem; } .showcase-hero { min-height: 300px; } .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#home" class="brand"><span>DripLuxe</span>Detailing</a>
+    <button id="nav-toggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span aria-hidden="true"></span></button>
+    <div class="nav-links">
+      <button type="button" data-page="home" class="nav-link active">Home</button>
+      <button type="button" data-page="services" class="nav-link">Services</button>
+      <button type="button" data-page="showcase" class="nav-link">Showcase</button>
+      <button type="button" data-page="testimonials" class="nav-link">Testimonials</button>
+      <button type="button" data-page="booking" class="nav-link">Book</button>
+    </div>
+    <button type="button" class="nav-cta" data-page="booking">Book Now</button>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-panel">
+      <div class="mobile-menu-header">
+        <span class="brand"><span>DripLuxe</span>Detailing</span>
+        <button id="mobile-menu-close" class="mobile-menu-close" aria-label="Close menu">×</button>
+      </div>
+      <div class="mobile-menu-links">
+        <button type="button" data-page="home" class="nav-link active">Home</button>
+        <button type="button" data-page="services" class="nav-link">Services</button>
+        <button type="button" data-page="showcase" class="nav-link">Showcase</button>
+        <button type="button" data-page="testimonials" class="nav-link">Testimonials</button>
+        <button type="button" data-page="booking" class="nav-link">Book</button>
+      </div>
+      <div class="mobile-menu-cta">
+        <button type="button" class="nav-cta" data-page="booking">Book Now</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="home" class="page active hero">
+      <div class="hero-bg"></div>
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="SnapInsta.to_AQOkUNYP6hsK29RPMh5eESidITwFK6dmVbmBrUw0gmDKk6LtPgJP12B10J_UNt-BMJY4bwdeROaSkPOxHo95o76roECGolOIGlHDsUM.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-light"></div>
+      <div class="hero-lines"></div>
+      <div class="hero-content">
+        <div class="eyebrow">Luxury Automotive Detailing</div>
+        <h1 class="hero-title">The Ultimate <strong>Premium Shine</strong> for Your Vehicle</h1>
+        <p class="hero-copy">High-end mobile detailing with a cinematic finish, ceramic protection, and elite automotive care designed to elevate every drive.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="open-booking-modal">Schedule a Detail</button>
+          <button class="btn btn-secondary" data-page="showcase">View Showcase</button>
+        </div>
+        <div class="hero-trust">
+          <span class="trust-chip">5.0 Google Rating</span>
+          <span class="trust-chip">100+ Luxury Vehicles</span>
+          <span class="trust-chip">Award-Winning Service</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="page section">
+      <div class="section-hero"><img src="Screenshot 2026-06-15 175338-modified.png" alt="DripLuxe Logo"/></div>
+      <div class="section-title"><span>01</span>Our Signature Services</div>
+      <p class="section-subtitle">Designed for discerning owners who demand flawless detail, lasting protection, and a showroom-grade finish.</p>
+      <div class="grid-3">
+        <article class="glass-card service-package" style="background-image: url('Screenshot 2026-06-17 185203.png'); background-size: cover; background-position: center;">
+          <div class="card-title">Express Drip</div>
+          <div class="card-text"><strong>From $69</strong> — Interior & Exterior Cleaning</div>
+          <ul style="margin-top:0.8rem;color: rgba(232,237,248,0.82);">
+            <li>Interior Vacuum & Seats</li>
+            <li>Exterior Cleaning</li>
+            <li>Glossy Wax Finish</li>
+          </ul>
+          <div style="margin-top:1rem;"><button class="btn btn-primary btn-book-package" data-service="signature" data-name="Express Drip" data-price="From $69">Book Now</button></div>
+        </article>
+        <article class="glass-card service-package" style="background-image: url('Screenshot 2026-06-17 185110.png'); background-size: cover; background-position: center;">
+          <div class="card-title">Deluxe Drip</div>
+          <div class="card-text"><strong>From $129</strong> — Full Interior & Exterior</div>
+          <ul style="margin-top:0.8rem;color: rgba(232,237,248,0.82);">
+            <li>Air Vents</li>
+            <li>Tire Shine</li>
+            <li>Steamer Service</li>
+          </ul>
+          <div style="margin-top:1rem;"><button class="btn btn-primary btn-book-package" data-service="signature" data-name="Deluxe Drip" data-price="From $129">Book Now</button></div>
+        </article>
+        <article class="glass-card service-package" style="background-image: url('Screenshot 2026-06-17 185006.png'); background-size: cover; background-position: center;">
+          <div class="card-title">Drip Drip</div>
+          <div class="card-text"><strong>From $249</strong> — Deep Cleaning & Shampoo</div>
+          <ul style="margin-top:0.8rem;color: rgba(232,237,248,0.82);">
+            <li>Pet Hair Removal</li>
+            <li>Carpet & Seats Shampoo</li>
+            <li>Premium Wax Finish</li>
+          </ul>
+          <div style="margin-top:1rem;"><button class="btn btn-primary btn-book-package" data-service="signature" data-name="Drip Drip" data-price="From $249">Book Now</button></div>
+        </article>
+        <article class="glass-card service-package" style="background-image: url('Screenshot 2026-06-17 184944.png'); background-size: cover; background-position: center;">
+          <div class="card-title">Ceramic Drip</div>
+          <div class="card-text"><strong>From $699</strong> — Ceramic Coating Application</div>
+          <ul style="margin-top:0.8rem;color: rgba(232,237,248,0.82);">
+            <li>Deep Cleaning</li>
+            <li>Ceramic Coating Application</li>
+            <li>Premium Wax & Tire Shine</li>
+          </ul>
+          <div style="margin-top:1rem;"><button class="btn btn-primary btn-book-package" data-service="signature" data-name="Ceramic Drip" data-price="From $699">Book Now</button></div>
+        </article>
+        <article class="glass-card service-package" style="background-image: url('Screenshot 2026-06-17 184934.png'); background-size: cover; background-position: center;">
+          <div class="card-title">Exotic Drip</div>
+          <div class="card-text"><strong>Call for Quote</strong> — Tailored Exotic Care</div>
+          <ul style="margin-top:0.8rem;color: rgba(232,237,248,0.82);">
+            <li>Custom-Formulated Detailing</li>
+            <li>High-Grade Material Application</li>
+            <li>Exclusive Vehicle Consultation</li>
+          </ul>
+          <div style="margin-top:1rem;"><button class="btn btn-primary btn-book-package" data-service="signature" data-name="Exotic Drip" data-price="Call for Quote">Book Now</button></div>
+        </article>
+      </div>
+      <div class="badge-list">
+        <div class="badge"><span>✓</span> Ceramic coating experts</div>
+        <div class="badge"><span>✓</span> Fully insured mobile service</div>
+        <div class="badge"><span>✓</span> VIP concierge support</div>
+      </div>
+    </section>
+
+    <section class="page section">
+      <div class="section-title"><span>02</span>Performance by the Numbers</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">98%</div><div class="stat-label">Client satisfaction</div></div>
+        <div class="stat-card"><div class="stat-number">4.9</div><div class="stat-label">Average Google star rating</div></div>
+        <div class="stat-card"><div class="stat-number">280+</div><div class="stat-label">Luxury cars detailed</div></div>
+        <div class="stat-card"><div class="stat-number">72h</div><div class="stat-label">Average response time</div></div>
+      </div>
+    </section>
+
+    <section id="showcase" class="page section">
+      <div class="section-hero"><img src="Screenshot 2026-06-15 175338-modified.png" alt="DripLuxe Logo"/></div>
+      <div class="section-title"><span>03</span>Signature Showcase</div>
+      <p class="section-subtitle">A curated presentation of transformations that communicate precision, depth, and premium craftsmanship.</p>
+      <div class="showcase-header">
+        <div class="showcase-hero">
+          <img src="Screenshot 2026-06-15 190926.png" alt="DripLuxe Premium Detailing" />
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 190926.png" alt="Detailing showcase 1" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 190914.png" alt="Detailing showcase 2" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 190900.png" alt="Detailing showcase 3" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185731.png" alt="Detailing showcase 4" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185722.png" alt="Detailing showcase 5" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185709.png" alt="Detailing showcase 6" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185524.png" alt="Detailing showcase 7" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185445.png" alt="Detailing showcase 8" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185409.png" alt="Detailing showcase 9" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185353.png" alt="Detailing showcase 10" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185338.png" alt="Detailing showcase 11" /></div>
+          <div class="gallery-item"><img src="Screenshot 2026-06-15 185325.png" alt="Detailing showcase 12" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="page section">
+      <div class="section-hero"><img src="Screenshot 2026-06-15 175338-modified.png" alt="DripLuxe Logo"/></div>
+      <div class="section-title"><span>04</span>Trusted by Luxury Drivers</div>
+      <p class="section-subtitle">Top-tier service with flawless execution, trusted by elite car owners across the region.</p>
+      <div class="testimonial-grid">
+        <article class="testimonial-card">
+          <div class="testimonial-profile"><div class="avatar">E</div><div><div class="testimonial-name">Emma P.</div><div class="testimonial-role">Luxury Owner</div></div></div>
+          <p class="testimonial-text">My car looks like it just rolled out of a private showroom. The finish is sharp, and the experience was seamless.</p>
+          <div class="testimonial-stars">★★★★★</div>
+        </article>
+        <article class="testimonial-card">
+          <div class="testimonial-profile"><div class="avatar">J</div><div><div class="testimonial-name">Jalal A.</div><div class="testimonial-role">Exotic Car Enthusiast</div></div></div>
+          <p class="testimonial-text">The level of detail and polish is unmatched. Every surface feels premium and protected.</p>
+          <div class="testimonial-stars">★★★★★</div>
+        </article>
+        <article class="testimonial-card">
+          <div class="testimonial-profile"><div class="avatar">L</div><div><div class="testimonial-name">Lara S.</div><div class="testimonial-role">Collector</div></div></div>
+          <p class="testimonial-text">Hands down the best detailing team. The attention to materials and finishes was incredible.</p>
+          <div class="testimonial-stars">★★★★★</div>
+        </article>
+          <article class="testimonial-card">
+            <div class="testimonial-profile"><div class="avatar">E</div><div><div class="testimonial-name">Erhan Bulut</div><div class="testimonial-role">Local Guide</div></div></div>
+            <p class="testimonial-text">They cleaned my business trucks fleet and handled the job with care — very trustworthy and professional service.</p>
+            <div class="testimonial-stars">★★★★★</div>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-profile"><div class="avatar">J</div><div><div class="testimonial-name">Johnny H</div><div class="testimonial-role">Verified Customer</div></div></div>
+            <p class="testimonial-text">The results exceeded my expectations. The team was professional, friendly, and paid incredible attention to detail.</p>
+            <div class="testimonial-stars">★★★★★</div>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-profile"><div class="avatar">T</div><div><div class="testimonial-name">Torian G.</div><div class="testimonial-role">Satisfied Client</div></div></div>
+            <p class="testimonial-text">Super impressed with how my car turned out. I’m usually picky but everything looked spotless and fresh without that overpowering smell.</p>
+            <div class="testimonial-stars">★★★★★</div>
+          </article>
+      </div>
+    </section>
+
+    <section id="booking" class="page section">
+      <div class="section-hero"><img src="Screenshot 2026-06-15 175338-modified.png" alt="DripLuxe Logo"/></div>
+      <div class="section-title"><span>05</span>Book Your Elite Detail</div>
+      <p class="section-subtitle">Secure your appointment now and reserve premium detailing with our elite team.</p>
+      <div class="booking-panel">
+        <div class="booking-card" style="width:100%;">
+          <div class="package-list" id="packages-container"></div>
+          <div id="booking-summary-page" style="margin-top:1rem; display:none;"></div>
+          <div class="form-actions" style="justify-content: flex-end; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-primary" id="booking-page-launch">Confirm Booking</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>DripLuxe Detailing</h3>
+          <p>Elite automotive care with cinematic finishes for premium vehicles and discerning owners.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="https://api.whatsapp.com/send?phone=16476152036">WhatsApp: +1 647-615-2036</a></li>
+            <li><a href="sms:4373889686">Text: 437 388 9686</a></li>
+            <li><a href="https://www.instagram.com/dripluxedetailing/" target="_blank" rel="noreferrer">Instagram: @dripluxedetailing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Hours</h3>
+          <ul>
+            <li>Mon–Fri: 9am–10pm</li>
+            <li>Sat: 9am–8pm</li>
+            <li>Sun: 10am–8pm</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Location</h3>
+          <p>45 Casmir Ct Unit 12, Vaughan, ON L4K 4H5</p>
+        </div>
+      </div>
+      <div class="footer-note">© 2026 DripLuxe Detailing</div>
+    </footer>
+
+    <div class="modal-overlay" id="booking-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="modal-title-text">Select Your Service</h2>
+            <p class="modal-subtitle" id="modal-subtitle-text">Choose the detailing service you'd like to book.</p>
+          </div>
+          <button id="modal-close" aria-label="Close">×</button>
+        </div>
+        <div id="service-selection" style="display: block;">
+          <div class="form-actions" style="flex-direction: column; gap: 1rem;">
+            <button type="button" class="btn btn-secondary" style="text-align: left;" data-service="interior">Interior Detailing</button>
+            <button type="button" class="btn btn-secondary" style="text-align: left;" data-service="exterior">Exterior Detailing</button>
+            <button type="button" class="btn btn-secondary" style="text-align: left;" data-service="full">Full Detail</button>
+          </div>
+        </div>
+        <div id="package-selection" style="display: none;">
+          <div class="form-actions" style="flex-direction: column; gap: 1rem;" id="packages-modal"></div>
+          <div class="form-actions" style="margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" id="back-to-service">← Back</button>
+          </div>
+        </div>
+        <form id="booking-form" style="display: none;">
+          <div class="booking-summary" id="modal-summary"></div>
+            <div style="grid-column: 1 / -1;">
+              <label class="form-label" for="modal-location">Location</label>
+              <input id="modal-location" class="form-input" type="text" value="45 Casmir Ct Unit 12, Vaughan, ON L4K 4H5" readonly />
+              <div class="form-note" style="margin-top:0.45rem;">This is the location to come to.</div>
+            </div>
+          <div class="form-grid">
+            <div style="grid-column: 1 / -1;">
+              <label class="form-label" for="modal-name">Full Name</label>
+              <input id="modal-name" class="form-input" type="text" placeholder="Your Name" required />
+              <div class="form-error" id="error-modal-name">Please enter your name</div>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label class="form-label" for="modal-phone">Phone</label>
+              <input id="modal-phone" class="form-input" type="tel" placeholder="(555) 123-4567" required />
+              <div class="form-error" id="error-modal-phone">Please enter your phone number</div>
+            </div>
+            <div>
+              <label class="form-label" for="modal-date">Date</label>
+              <input id="modal-date" class="form-input" type="date" required />
+              <div class="form-error" id="error-modal-date">Please select a date</div>
+            </div>
+            <div>
+              <label class="form-label" for="modal-time">Time</label>
+              <input id="modal-time" class="form-input" type="time" required />
+              <div class="form-note" id="modal-time-note">Available hours: 9:00am–10:00pm</div>
+              <div class="form-error" id="error-modal-time">Please select a time</div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="back-to-package">← Back</button>
+            <button type="button" class="btn btn-primary" id="confirm-booking">Confirm Booking</button>
+          </div>
+          <div class="form-actions" id="confirm-choice" style="display:none; margin-top:1rem;">
+            <button type="button" class="btn btn-primary" id="choice-whatsapp">Send via WhatsApp (+1 647-615-2036)</button>
+            <button type="button" class="btn btn-secondary" id="choice-sms">Send via SMS (+1 437 388 9686)</button>
+            <button type="button" class="btn btn-secondary" id="choice-cancel">Cancel</button>
+          </div>
+        </form>
+        <div class="success-state" id="success-state">
+          <div class="success-card">
+            <h3 class="success-title">Booking Request Sent!</h3>
+            <p class="success-text">Your booking details have been sent successfully. We'll confirm your appointment shortly.</p>
+            <div class="form-actions"><button type="button" class="btn btn-primary" id="success-close" style="justify-content: center; width: 100%;">Done</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating action buttons: Reviews and Book Now -->
+  <div class="fab-group" aria-hidden="false">
+    <a href="#testimonials" class="fab fab-review" id="fab-review">Reviews</a>
+    <button class="fab fab-book" id="fab-book">Book Now</button>
+  </div>
+
+  <script>
+    const packagesByService = {
+      interior: [
+        { name: 'Interior Detail', price: 145, description: 'Deep cleanse, leather care, and cabin refresh.' },
+        { name: 'Premium Interior', price: 185, description: 'Sanitization, protection, and luxury finish.' }
+      ],
+      exterior: [
+        { name: 'Exterior Detail', price: 95, description: 'Wash, polish, and gloss rejuvenation.' },
+        { name: 'Ceramic Boost', price: 195, description: 'High-gloss ceramic protection for paint and glass.' }
+      ],
+      full: [
+        { name: 'Showroom Full', price: 275, description: 'Complete interior + exterior elite detailing.' },
+        { name: 'Elite Full', price: 345, description: 'Maximum finish, protection, and premium care.' }
+      ]
+      ,
+      // Signature packages shown on the Services page — ensure they appear on the booking page
+      signature: [
+        { name: 'Express Drip', price: 'From $69', description: 'Interior & Exterior Cleaning — Vacuum, exterior wash, glossy wax finish.' },
+        { name: 'Deluxe Drip', price: 'From $129', description: 'Full interior & exterior detail — vents, tire shine, steamer service.' },
+        { name: 'Drip Drip', price: 'From $249', description: 'Deep cleaning & shampoo — pet hair removal, carpets, premium wax.' },
+        { name: 'Ceramic Drip', price: 'From $699', description: 'Ceramic coating application — deep clean and premium protection.' },
+        { name: 'Exotic Drip', price: 'Call for Quote', description: 'Tailored exotic care with custom formulation and consultation.' }
+      ]
+    };
+    const state = { service: 'signature', pkg: packagesByService.signature ? packagesByService.signature[0] : (packagesByService.interior[0]) };
+    const fixedLocation = '45 Casmir Ct Unit 12, Vaughan, ON L4K 4H5';
+    const pages = {
+      home: document.getElementById('home'),
+      services: document.getElementById('services'),
+      showcase: document.getElementById('showcase'),
+      testimonials: document.getElementById('testimonials'),
+      booking: document.getElementById('booking')
+    };
+    const navButtons = document.querySelectorAll('.nav-link, .nav-cta, .hero-actions .btn');
+    const packageContainer = document.getElementById('packages-container');
+    const bookingModal = document.getElementById('booking-modal');
+    const bookingForm = document.getElementById('booking-form');
+    const modalName = document.getElementById('modal-name');
+    const modalPhone = document.getElementById('modal-phone');
+    const modalDate = document.getElementById('modal-date');
+    const modalTime = document.getElementById('modal-time');
+    const successState = document.getElementById('success-state');
+    const modalSummary = document.getElementById('modal-summary');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navToggle = document.getElementById('nav-toggle');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const navEl = document.querySelector('nav');
+    const bookingSchedule = {
+      weekday: { open: '09:00', close: '22:00' },
+      saturday: { open: '09:00', close: '20:00' },
+      sunday: { open: '10:00', close: '20:00' }
+    };
+
+    // initialize aria state for accessibility
+    if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+    function updateNavOffset() {
+      const nav = navEl || document.querySelector('nav');
+      const height = nav ? nav.offsetHeight : 86;
+      document.documentElement.style.setProperty('--nav-offset', height + 'px');
+    }
+
+    navButtons.forEach(button => button.addEventListener('click', () => {
+      const page = button.dataset.page;
+      if (!page) return;
+      switchPage(page);
+    }));
+
+    document.querySelectorAll('.nav-link').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('.nav-link').forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+    }));
+
+    document.getElementById('open-booking-modal').addEventListener('click', openModal);
+    document.getElementById('booking-page-launch').addEventListener('click', openBookingModalFromPage);
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('success-close').addEventListener('click', closeModal);
+    document.querySelectorAll('#service-selection .btn').forEach(btn => btn.addEventListener('click', selectServiceStep));
+    const bookingServiceTabsEl = document.getElementById('booking-service-tabs');
+    if (bookingServiceTabsEl) {
+      bookingServiceTabsEl.addEventListener('click', function(e) {
+        const btn = e.target.closest('button');
+        if (!btn || !btn.dataset.service) return;
+        selectService(btn.dataset.service);
+      });
+    }
+    document.getElementById('packages-modal').addEventListener('click', function(e) {
+      const btn = e.target.closest('button');
+      if (!btn || !btn.dataset.pkg) return;
+      selectPackageStep(btn);
+    });
+    document.getElementById('back-to-service').addEventListener('click', backToService);
+    document.getElementById('back-to-package').addEventListener('click', backToPackage);
+    navToggle.addEventListener('click', toggleMobileMenu);
+    mobileMenuClose.addEventListener('click', toggleMobileMenu);
+
+    // close mobile menu when a mobile link or CTA is clicked
+    document.querySelectorAll('.mobile-menu-links .nav-link, .mobile-menu-cta .nav-cta').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const page = btn.dataset.page;
+        if (page) switchPage(page);
+        if (mobileMenu) mobileMenu.classList.remove('active');
+        if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    if (modalDate) {
+      modalDate.addEventListener('change', () => {
+        updateModalTimeForDate(modalDate.value);
+      });
+    }
+
+    function getScheduleForDate(dateValue) {
+      if (!dateValue) return bookingSchedule.weekday;
+      const [year, month, day] = dateValue.split('-').map(Number);
+      const selected = new Date(year, month - 1, day);
+      const dayOfWeek = selected.getDay();
+      if (dayOfWeek === 6) return bookingSchedule.saturday;
+      if (dayOfWeek === 0) return bookingSchedule.sunday;
+      return bookingSchedule.weekday;
+    }
+
+    function getScheduleLabel(schedule) {
+      if (!schedule) return 'Available hours: 9:00am–10:00pm';
+      const format = time => {
+        const [hour, minute] = time.split(':').map(Number);
+        const suffix = hour >= 12 ? 'pm' : 'am';
+        const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+        return `${hour12}:${minute.toString().padStart(2, '0')}${suffix}`;
+      };
+      return `Available hours: ${format(schedule.open)}–${format(schedule.close)}`;
+    }
+
+    function updateModalTimeForDate(dateValue) {
+      const schedule = getScheduleForDate(dateValue);
+      modalTime.min = schedule.open;
+      modalTime.max = schedule.close;
+      const noteEl = document.getElementById('modal-time-note');
+      if (noteEl) {
+        noteEl.textContent = getScheduleLabel(schedule);
+      }
+      if (modalTime.value && (modalTime.value < schedule.open || modalTime.value > schedule.close)) {
+        modalTime.value = '';
+      }
+    }
+
+    // Book buttons in Services packages should go to the Booking page
+    // and preselect the corresponding package (do not open the modal directly)
+    document.querySelectorAll('.btn-book-package').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const svc = btn.dataset.service || 'signature';
+        const name = btn.dataset.name;
+        state.service = svc;
+        const list = packagesByService[svc] || [];
+        const found = list.find(p => p.name === name);
+        if (found) {
+          state.pkg = found;
+        } else {
+          // fallback lightweight pkg object
+          state.pkg = { name: name, price: btn.dataset.price, description: '' };
+          if (list && Array.isArray(list) && !list.some(p=>p.name===name)) list.push(state.pkg);
+        }
+        // navigate to the booking page where packages are shown
+        switchPage('booking');
+      });
+    });
+
+    // Floating action buttons should just navigate to the page
+    const fabBook = document.getElementById('fab-book');
+    const fabReview = document.getElementById('fab-review');
+    if (fabBook) fabBook.addEventListener('click', () => switchPage('booking'));
+    if (fabReview) fabReview.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchPage('testimonials');
+    });
+
+    // Confirm booking flow: show choice between WhatsApp or SMS
+    const confirmBtn = document.getElementById('confirm-booking');
+    const confirmChoice = document.getElementById('confirm-choice');
+    const choiceWhatsapp = document.getElementById('choice-whatsapp');
+    const choiceSms = document.getElementById('choice-sms');
+    const choiceCancel = document.getElementById('choice-cancel');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => {
+        if (!validateModalForm()) return;
+        if (confirmChoice) confirmChoice.style.display = 'flex';
+      });
+    }
+    if (choiceWhatsapp) choiceWhatsapp.addEventListener('click', () => { sendBooking('whatsapp'); if (confirmChoice) confirmChoice.style.display = 'none'; });
+    if (choiceSms) choiceSms.addEventListener('click', () => { sendBooking('sms'); if (confirmChoice) confirmChoice.style.display = 'none'; });
+    if (choiceCancel) choiceCancel.addEventListener('click', () => { if (confirmChoice) confirmChoice.style.display = 'none'; });
+
+    function switchPage(page) {
+      Object.keys(pages).forEach(key => {
+        pages[key].classList.toggle('active', key === page);
+      });
+      document.querySelectorAll('.nav-link').forEach(item => item.classList.toggle('active', item.dataset.page === page));
+      mobileMenu.classList.remove('active');
+      setTimeout(() => {
+        if (page === 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const element = document.getElementById(page);
+          if (element) {
+            const navHeight = navEl ? navEl.offsetHeight : 100;
+            // small offset to avoid touching the border
+            const offset = navHeight + 8;
+            const target = element.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+          }
+        }
+      }, 50);
+      renderPackages();
+    }
+
+    function renderPackages() {
+      packageContainer.innerHTML = '';
+      const selected = (state.service && packagesByService[state.service]) ? packagesByService[state.service] : (packagesByService.signature || packagesByService.full);
+      if (!state.pkg || !selected.some(pkg => pkg.name === state.pkg.name)) {
+        state.pkg = selected[0];
+      }
+      selected.forEach(pkg => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'package-option' + (state.pkg.name === pkg.name ? ' selected' : '');
+        const priceText = (typeof pkg.price === 'number') ? `$${pkg.price}` : pkg.price;
+        card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0">${pkg.name}</h3><div style="font-weight:700;color:var(--black);opacity:0.95">${priceText}</div></div><p style="margin-top:0.6rem">${pkg.description}</p>`;
+        card.addEventListener('click', () => {
+          state.pkg = pkg;
+          document.querySelectorAll('.package-option').forEach(item => item.classList.remove('selected'));
+          card.classList.add('selected');
+          showBookingSummary(pkg);
+        });
+        packageContainer.appendChild(card);
+      });
+      if (state.pkg) {
+        showBookingSummary(state.pkg);
+      }
+    }
+
+    function showBookingSummary(pkg) {
+      const summaryEl = document.getElementById('booking-summary-page');
+      if (!summaryEl || !pkg) return;
+      const price = (typeof pkg.price === 'number') ? `$${pkg.price}` : pkg.price;
+      summaryEl.style.display = 'block';
+      summaryEl.innerHTML = `<div class="booking-card" style="margin-top:0.8rem;"><p style="margin:0.2rem 0"><strong>Package:</strong> ${pkg.name}</p><p style="margin:0.2rem 0"><strong>Price:</strong> ${price}</p><p style="margin:0.6rem 0">${pkg.description}</p><div style="margin-top:0.6rem; color: rgba(0,0,0,0.75);"><strong>Services Included:</strong><ul style="margin:0.5rem 0 0 1.1rem; color: #000;">${renderInclusions(pkg)}</ul></div></div>`;
+    }
+
+    function renderInclusions(pkg) {
+      // generate list items for known inclusions by parsing description or using known mapping
+      // if description contains commas or '—' use it as a single paragraph; otherwise, map known package names
+      const mappings = {
+        'Express Drip': ['Interior Vacuum & Seats','Exterior Cleaning','Glossy Wax Finish'],
+        'Deluxe Drip': ['Air Vents','Tire Shine','Shiny Wax Finish','Steamer Service'],
+        'Drip Drip': ['Steamer Service','Deep Cleaning','Pet Hair Removal','Tire Shine','Premium Wax Finish','Carpet & Seats Shampoo'],
+        'Ceramic Drip': ['Deep Cleaning','Steamer Service','Pet Hair Removal','Ceramic Coating Application','Tire Shine','Premium Wax Finish'],
+        'Exotic Drip': ['Custom-Formulated Detailing','High-Grade Material Application','Exclusive Vehicle Consultation','High-Grade Rare Material Finishes','Limited Production Vehicle Specialization']
+      };
+      const list = mappings[pkg.name];
+      if (list && list.length) return list.map(i => `<li>${i}</li>`).join('');
+      // fallback: split description by commas
+      if (pkg.description) return pkg.description.split(',').map(s => `<li>${s.trim()}</li>`).join('');
+      return '';
+    }
+
+    function openModal(skipToForm = false) {
+      bookingModal.classList.add('active');
+      document.getElementById('success-state').style.display = 'none';
+      if (skipToForm && state.pkg) {
+        document.getElementById('service-selection').style.display = 'none';
+        document.getElementById('package-selection').style.display = 'none';
+        document.getElementById('booking-form').style.display = 'block';
+        document.getElementById('modal-title-text').textContent = 'Complete Your Booking';
+        document.getElementById('modal-subtitle-text').textContent = 'Enter your details to confirm your appointment.';
+        updateModalSummary();
+      } else {
+        document.getElementById('service-selection').style.display = 'block';
+        document.getElementById('package-selection').style.display = 'none';
+        document.getElementById('booking-form').style.display = 'none';
+        document.getElementById('modal-title-text').textContent = 'Select Your Service';
+        document.getElementById('modal-subtitle-text').textContent = 'Choose the detailing service you\'d like to book.';
+      }
+    }
+
+    function openBookingModalFromPage() {
+      if (!state.pkg) {
+        openModal(false);
+      } else {
+        openModal(true);
+      }
+    }
+
+    function selectService(service) {
+      state.service = service;
+      document.querySelectorAll('#booking-service-tabs .service-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.service === service);
+      });
+      renderPackages();
+    }
+
+    function closeModal() {
+      bookingModal.classList.remove('active');
+    }
+
+    function selectServiceStep(e) {
+      state.service = e.target.dataset.service || 'interior';
+      renderPackagesModal();
+      document.getElementById('service-selection').style.display = 'none';
+      document.getElementById('package-selection').style.display = 'block';
+    }
+
+    function renderPackagesModal() {
+      const packagesModal = document.getElementById('packages-modal');
+      packagesModal.innerHTML = '';
+      const selected = packagesByService[state.service] || packagesByService.interior;
+      selected.forEach(pkg => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-secondary';
+        btn.style.textAlign = 'left';
+        btn.dataset.pkg = pkg.name;
+        btn.innerHTML = `<strong>${pkg.name}</strong> - $${pkg.price}<br/><small style="opacity: 0.8;">${pkg.description}</small>`;
+        btn.addEventListener('click', () => selectPackageStep(btn));
+        packagesModal.appendChild(btn);
+      });
+    }
+
+    function selectPackageStep(btn) {
+      const pkgName = btn.dataset.pkg;
+      state.pkg = packagesByService[state.service].find(p => p.name === pkgName);
+      document.getElementById('package-selection').style.display = 'none';
+      document.getElementById('booking-form').style.display = 'block';
+      document.getElementById('modal-title-text').textContent = 'Complete Your Booking';
+      document.getElementById('modal-subtitle-text').textContent = 'Enter your details to confirm your appointment.';
+      updateModalSummary();
+    }
+
+    function updateModalSummary() {
+      const summary = document.getElementById('modal-summary');
+      const serviceNames = { interior: 'Interior Detailing', exterior: 'Exterior Detailing', full: 'Full Detail' };
+      const serviceLabel = serviceNames[state.service] || state.service || '';
+      const priceText = (typeof state.pkg.price === 'number') ? `$${state.pkg.price}` : state.pkg.price;
+      summary.innerHTML = `<div class="booking-card" style="margin-bottom: 1.5rem;"><p style="margin: 0.5rem 0;"><strong>Service:</strong> ${serviceLabel}</p><p style="margin: 0.5rem 0;"><strong>Package:</strong> ${state.pkg.name} - ${priceText}</p></div>`;
+    }
+
+    function backToService() {
+      document.getElementById('service-selection').style.display = 'block';
+      document.getElementById('package-selection').style.display = 'none';
+      document.getElementById('modal-title-text').textContent = 'Select Your Service';
+      document.getElementById('modal-subtitle-text').textContent = 'Choose the detailing service you\'d like to book.';
+    }
+
+    function backToPackage() {
+      document.getElementById('booking-form').style.display = 'none';
+      document.getElementById('package-selection').style.display = 'block';
+      document.getElementById('modal-title-text').textContent = 'Select Your Package';
+      document.getElementById('modal-subtitle-text').textContent = 'Choose the package that best fits your needs.';
+    }
+
+    function validateBookingForm() {
+      let valid = true;
+      const name = document.getElementById('form-name');
+      const phone = document.getElementById('form-phone');
+      const date = document.getElementById('form-date');
+      const time = document.getElementById('form-time');
+      if (!name || !phone || !date || !time) return false;
+      const errorName = document.getElementById('error-name');
+      const errorPhone = document.getElementById('error-phone');
+      const errorDate = document.getElementById('error-date');
+      const errorTime = document.getElementById('error-time');
+      if (errorName) errorName.classList.toggle('show', !name.value.trim());
+      if (errorPhone) errorPhone.classList.toggle('show', !phone.value.trim());
+      if (errorDate) errorDate.classList.toggle('show', !date.value);
+      if (errorTime) errorTime.classList.toggle('show', !time.value);
+      if (!name.value.trim() || !phone.value.trim() || !date.value || !time.value) valid = false;
+      return valid;
+    }
+
+    function validateModalForm() {
+      let valid = true;
+      const name = document.getElementById('modal-name');
+      const phone = document.getElementById('modal-phone');
+      const date = document.getElementById('modal-date');
+      const time = document.getElementById('modal-time');
+      document.getElementById('error-modal-name').classList.toggle('show', !name.value.trim());
+      document.getElementById('error-modal-phone').classList.toggle('show', !phone.value.trim());
+      document.getElementById('error-modal-date').classList.toggle('show', !date.value);
+      document.getElementById('error-modal-time').classList.toggle('show', !time.value);
+      if (!name.value.trim() || !phone.value.trim() || !date.value || !time.value) valid = false;
+      return valid;
+    }
+
+    function sendBooking(method) {
+      if (!validateModalForm()) return;
+      const name = document.getElementById('modal-name').value;
+      const phone = document.getElementById('modal-phone').value;
+      const date = document.getElementById('modal-date').value;
+      const time = document.getElementById('modal-time').value;
+      const serviceNames = { interior: 'Interior Detailing', exterior: 'Exterior Detailing', full: 'Full Detail' };
+      const pkgPriceText = (typeof state.pkg.price === 'number') ? `$${state.pkg.price}` : state.pkg.price;
+      const msgText = `Booking Request:\n\nName: ${name}\nPhone: ${phone}\nService: ${serviceNames[state.service] || state.service}\nPackage: ${state.pkg.name} (${pkgPriceText})\nDate: ${date}\nTime: ${time}\nLocation: ${fixedLocation}`;
+      const whatsappNumber = '16476152036';
+      const smsNumber = '4373889686';
+      if (method === 'whatsapp') {
+        // open WhatsApp web/app with prefilled recipient and message
+        const waUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(msgText)}`;
+        window.open(waUrl, '_blank');
+      } else {
+        // open SMS app with prefilled recipient and body
+        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const separator = isIos ? '&' : '?';
+        const smsUrl = `sms:${smsNumber}${separator}body=${encodeURIComponent(msgText)}`;
+        window.location.href = smsUrl;
+      }
+      setTimeout(() => {
+        document.getElementById('success-state').style.display = 'block';
+      }, 200);
+    }
+
+    function updateBookingConstraints() {
+      const today = new Date().toISOString().split('T')[0];
+      const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const formDate = document.getElementById('form-date');
+      const formTime = document.getElementById('form-time');
+      if (formDate) {
+        formDate.min = today;
+        formDate.max = maxDate;
+      }
+      if (formTime) {
+        formTime.min = bookingSchedule.weekday.open;
+        formTime.max = bookingSchedule.weekday.close;
+      }
+      modalDate.min = today;
+      modalDate.max = maxDate;
+      updateModalTimeForDate(modalDate.value || today);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPackages();
+      selectService(state.service);
+      updateBookingConstraints();
+      updateNavOffset();
+      switchPage('home');
+      window.addEventListener('resize', updateNavOffset);
+    });
+
+    function toggleMobileMenu() {
+      if (!mobileMenu) return;
+      const isActive = mobileMenu.classList.toggle('active');
+      if (navToggle) navToggle.setAttribute('aria-expanded', String(isActive));
+    }
+  </script>
+</body>
+</html>
